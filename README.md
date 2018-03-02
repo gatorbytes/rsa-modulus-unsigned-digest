@@ -12,6 +12,7 @@ $ ./gradlew run
 ## Inputs
 
 Replace `expected` with the hash of your key from the output of `certutil -K` on your NSS database.
+
 Replace `modulusString` with your RSA modulus. You can retrieve the modulus in a variety of ways. For example, use `openssl` on a CSR to get the modulus in base 16:
 ```
 $ openssl req -in example.csr -modulus
@@ -49,6 +50,6 @@ The output provides a long hex string for each key that looks suspiciously like 
 
 A look at the documentation for `certutil -K` provides another hint:
 
->List the key ID of keys in the key database. A key ID is the *modulus of the RSA key* or the publicValue of the DSA key. IDs are displayed in hexadecimal ("0x" is not shown).
+>List the key ID of keys in the key database. A key ID is the **modulus of the RSA key** or the publicValue of the DSA key. IDs are displayed in hexadecimal ("0x" is not shown).
 
 It appears to be a SHA1 hash of the RSA key modulus, but a quick mock up in Java to test this idea yields a different hash value. After reviewing the NSS source, the RSA modulus is often stored in an unsigned long data type. Since there is no direct unsigned equivalent in Java, we'll need to do some extra work. BigInteger provides easy access to the two's complement binary value via `toByteArray()` and the javadoc for `toByteArray()` indicates the array is big-endian. Therefore, all we need to do is drop the first bit (the sign bit) and re-hash. Running the class again with this update confirms that our SHA1 hash of the unsigned RSA modulus is equivalent to the NSS output.
