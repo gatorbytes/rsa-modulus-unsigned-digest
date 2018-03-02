@@ -48,7 +48,7 @@ Enter Password or Pin for "NSS Certificate DB":
 ```
 The output provides a long hex string for each key that looks suspiciously like a hash digest. The 40 character length strongly hints at SHA1. But what is it a digest of?
 
-A look at the documentation for `certutil -K` provides another hint:
+A look at the [documentation](https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/Tools/certutil) for `certutil -K` provides another hint:
 
 >List the key ID of keys in the key database. A key ID is the **modulus of the RSA key** or the publicValue of the DSA key. IDs are displayed in hexadecimal ("0x" is not shown).
 
